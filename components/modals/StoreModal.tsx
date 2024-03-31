@@ -6,9 +6,10 @@ import Modal from "./Modal";
 import { useStoreModal } from "@/hooks/use-store-modal";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import axios from 'axios'
 
 const formSchema = z.object({
    name: z.string().min(1),
@@ -27,10 +28,11 @@ const StoreModal: FC<StoreModalProps> = ({}) => {
       },
    })
 
-   const onSubmit = async (value: z.infer<typeof formSchema>)=>{
+   const onSubmit = async (values: z.infer<typeof formSchema>)=>{
       try {
          setloading(true)
-         //api req
+         const response = await axios.post('/api/stores',values)
+         if(response) window.location.assign('/'+response.data.id) 
       } catch (error) {
          toast.error('something went wrong')
       } finally{
@@ -60,6 +62,7 @@ const StoreModal: FC<StoreModalProps> = ({}) => {
                                     placeholder="E-commerce"
                                  {...field}></Input>
                               </FormControl>
+                              <FormMessage/>
                            </FormItem>
                         )}
                      >

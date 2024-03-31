@@ -1,5 +1,5 @@
 import { getEmail, createUser } from "@/database/users";
-import { saveCookie } from "../cokie";
+import { saveCookie } from "../../cokie";
 
 export async function POST(req: Request) {
    const { email, password, username } = await req.json();
@@ -20,8 +20,13 @@ export async function POST(req: Request) {
 
    try {
       await createUser(user);
-      const {emaiL, username, role} = await getEmail(email)
-      await saveCookie({ email: emaiL, username, role })
+      const {id, email: emaiL, username, user_role} = await getEmail(email)
+      await saveCookie({
+         id,
+         email: emaiL,
+         username,
+         role: user_role
+      })
       return Response.json({
          success: true,
          message: 'Ustunlkli'
